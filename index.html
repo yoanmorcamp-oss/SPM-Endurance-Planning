@@ -62,8 +62,6 @@
         .btn-discord:hover {
             background-color: #4752c4;
         }
-        
-        /* Grille et Planning */
         .hidden { display: none; }
         table {
             width: 100%;
@@ -89,6 +87,17 @@
         input[type="checkbox"] {
             transform: scale(1.3);
             cursor: pointer;
+        }
+        .input-name {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #162038;
+            border: 1px solid var(--border-color);
+            color: white;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
         }
         .categories-box {
             margin: 20px 0;
@@ -133,55 +142,28 @@
     <!-- PAGE 1 : CONNEXION -->
     <div id="login-section" class="container" style="text-align: center; max-width: 500px;">
         <h1>SPM ENDURANCE PLANNER</h1>
-        <p class="subtitle">Connecte-toi avec ton compte Discord pour indiquer tes disponibilités.</p>
-        
+        <p class="subtitle">Clique pour accéder au planning de la prochaine course.</p>
         <button onclick="appLogin()" class="btn-discord">
-            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-            Se connecter avec Discord
+            Accéder au Planning
         </button>
     </div>
 
-    <!-- PAGE 2 : GRILLE DE DISPO (Cachée par défaut) -->
+    <!-- PAGE 2 : GRILLE DE DISPO -->
     <div id="planner-section" class="container hidden">
-        <h1>Endurance 6H - Choix des disponibilités</h1>
-        <p class="subtitle">Coche tes créneaux horaires et choisis ta catégorie pour la course.</p>
+        <h1 id="race-title-display">Chargement de la course...</h1>
+        <p class="subtitle">Indique ton pseudo, coche tes créneaux et valide pour envoyer sur Discord.</p>
+
+        <input type="text" id="pilote-nom" class="input-name" placeholder="Ton Pseudo / Pilote (ex: Yoan_SPM)">
 
         <table>
             <thead>
-                <tr>
+                <tr id="table-header">
                     <th>Date / Heure</th>
-                    <th>02h00</th>
-                    <th>07h00</th>
-                    <th>12h00</th>
-                    <th>17h00</th>
-                    <th>22h00</th>
+                    <!-- Les horaires s'injecteront automatiquement ici -->
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td class="day-cell">Ven. 02 Oct</td>
-                    <td><input type="checkbox"></td>
-                    <td><input type="checkbox"></td>
-                    <td><input type="checkbox"></td>
-                    <td><input type="checkbox"></td>
-                    <td><input type="checkbox"></td>
-                </tr>
-                <tr>
-                    <td class="day-cell">Sam. 03 Oct</td>
-                    <td><input type="checkbox"></td>
-                    <td><input type="checkbox"></td>
-                    <td><input type="checkbox"></td>
-                    <td><input type="checkbox"></td>
-                    <td><input type="checkbox"></td>
-                </tr>
-                <tr>
-                    <td class="day-cell">Dim. 04 Oct</td>
-                    <td><input type="checkbox"></td>
-                    <td><input type="checkbox"></td>
-                    <td><input type="checkbox"></td>
-                    <td><input type="checkbox"></td>
-                    <td><input type="checkbox"></td>
-                </tr>
+            <tbody id="table-body">
+                <!-- Les jours et cases s'injecteront automatiquement ici -->
             </tbody>
         </table>
 
@@ -192,21 +174,113 @@
             <label><input type="radio" name="cat" value="Les deux"> Les deux / Indifférent</label>
         </div>
 
-        <button onclick="saveDispos()" class="btn-save">Enregistrer mes disponibilités</button>
+        <button onclick="saveDispos()" class="btn-save">Envoyer mes disponibilités sur Discord</button>
         
         <div id="success-message" class="success-msg">
-            ✅ Merci ! Vos disponibilités ont bien été enregistrées dans le planning de l'équipe.
+            ✅ Envoyé avec succès sur le salon Discord de l'équipe !
         </div>
     </div>
 
     <script>
+        // =========================================================================
+        // ⚙️ CONFIGURATION DE LA COURSE (Modifie ces lignes pour chaque nouvelle course)
+        // =========================================================================
+        const CONFIG_COURSE = {
+            nom: "Endurance 6H de Fuji",
+            horaires: ["02h00", "07h00", "12h00", "17h00", "22h00"],
+            jours: [
+                { nom: "Ven. 02 Oct", dateCode: "Ven_02" },
+                { nom: "Sam. 03 Oct", dateCode: "Sam_03" },
+                { nom: "Dim. 04 Oct", dateCode: "Dim_04" }
+            ]
+        };
+
+        // Remplace par ton URL de Webhook Discord récupérée dans ton salon dédié
+        const webhookURL = "MET_TON_URL_DE_WEBHOOK_ICI"; 
+        // =========================================================================
+
+        // Génération automatique de la grille au chargement de la page
+        window.onload = function() {
+            document.getElementById('race-title-display').innerText = CONFIG_COURSE.nom;
+
+            // Construction de l'en-tête du tableau (les heures)
+            const headerTr = document.getElementById('table-header');
+            CONFIG_COURSE.horaires.forEach(heure => {
+                const th = document.createElement('th');
+                th.innerText = heure;
+                headerTr.appendChild(th);
+            });
+
+            // Construction du corps du tableau (les jours et les checkboxes)
+            const tbody = document.getElementById('table-body');
+            CONFIG_COURSE.jours.forEach(jour => {
+                const tr = document.createElement('tr');
+                
+                const tdDay = document.createElement('td');
+                tdDay.className = 'day-cell';
+                tdDay.innerText = jour.nom;
+                tr.appendChild(tdDay);
+
+                CONFIG_COURSE.horaires.forEach(heure => {
+                    const td = document.createElement('td');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'slot';
+                    checkbox.setAttribute('data-time', `${jour.nom} - ${heure}`);
+                    td.appendChild(checkbox);
+                    tr.appendChild(td);
+                });
+
+                tbody.appendChild(tr);
+            });
+        };
+
         function appLogin() {
             document.getElementById('login-section').style.display = 'none';
             document.getElementById('planner-section').classList.remove('hidden');
         }
 
         function saveDispos() {
-            document.getElementById('success-message').style.display = 'block';
+            const nom = document.getElementById('pilote-nom').value.trim();
+            if (!nom) {
+                alert("Merci d'indiquer ton pseudo avant d'envoyer !");
+                return;
+            }
+
+            let selectedCat = "Non spécifiée";
+            const cats = document.getElementsByName('cat');
+            for (let c of cats) {
+                if (c.checked) selectedCat = c.value;
+            }
+
+            let slots = [];
+            const checkboxes = document.querySelectorAll('.slot');
+            checkboxes.forEach(box => {
+                if (box.checked) {
+                    slots.push(box.getAttribute('data-time'));
+                }
+            });
+
+            const payload = {
+                content: `🏎️ **Nouvelles disponibilités : ${CONFIG_COURSE.nom}**\n👤 **Pilote :** ${nom}\n🏁 **Catégorie :** ${selectedCat}\n📅 **Créneaux :** ${slots.length > 0 ? slots.join(', ') : 'Aucun créneau sélectionné'}`
+            };
+
+            fetch(webhookURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('success-message').style.display = 'block';
+                } else {
+                    alert("Erreur lors de l'envoi vers Discord. Vérifie ton URL de Webhook.");
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                alert("Erreur de connexion avec le Webhook.");
+            });
         }
     </script>
 
