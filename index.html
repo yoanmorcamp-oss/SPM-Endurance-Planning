@@ -143,7 +143,7 @@
     <div id="login-section" class="container" style="text-align: center; max-width: 500px;">
         <h1>SPM ENDURANCE PLANNER</h1>
         <p class="subtitle">Clique pour accéder au planning de la prochaine course.</p>
-        <button onclick="appLogin()" class="btn-discord">
+        <button id="btn-login" class="btn-discord">
             Accéder au Planning
         </button>
     </div>
@@ -172,7 +172,7 @@
             <label><input type="radio" name="cat" value="Les deux"> Les deux / Indifférent</label>
         </div>
 
-        <button onclick="saveDispos()" class="btn-save">Envoyer mes disponibilités sur Discord</button>
+        <button id="btn-submit" class="btn-save">Envoyer mes disponibilités sur Discord</button>
         
         <div id="success-message" class="success-msg">
             ✅ Envoyé avec succès sur le salon Discord de l'équipe !
@@ -180,9 +180,6 @@
     </div>
 
     <script>
-        // =========================================================================
-        // ⚙️ CONFIGURATION DE LA COURSE
-        // =========================================================================
         const CONFIG_COURSE = {
             nom: "Endurance 6H de Fuji",
             horaires: ["02h00", "07h00", "12h00", "17h00", "22h00"],
@@ -193,11 +190,11 @@
             ]
         };
 
-        // Ton URL de Webhook Discord (déjà configurée avec ton thread_id)
         const webhookURL = "https://discord.com/api/webhooks/1554222081875382364/EqaCFdbIGbRYc8s70u_brnYigSAVVb4Cg6O0TRVeGiwwqf37za9qrh1Rw3pQYZ1dJVbI?thread_id=1554104142539264070";
-        // =========================================================================
 
-        window.onload = function() {
+        // Utilisation d'écouteurs d'événements sécurisés au lieu du onclick direct
+        document.addEventListener('DOMContentLoaded', () => {
+            // Génération de la grille
             document.getElementById('race-title-display').innerText = CONFIG_COURSE.nom;
 
             const headerTr = document.getElementById('table-header');
@@ -228,56 +225,57 @@
 
                 tbody.appendChild(tr);
             });
-        };
 
-        function appLogin() {
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('planner-section').classList.remove('hidden');
-        }
-
-        function saveDispos() {
-            const nom = document.getElementById('pilote-nom').value.trim();
-            if (!nom) {
-                alert("Merci d'indiquer ton pseudo avant d'envoyer !");
-                return;
-            }
-
-            let selectedCat = "Non spécifiée";
-            const cats = document.getElementsByName('cat');
-            for (let c of cats) {
-                if (c.checked) selectedCat = c.value;
-            }
-
-            let slots = [];
-            const checkboxes = document.querySelectorAll('.slot');
-            checkboxes.forEach(box => {
-                if (box.checked) {
-                    slots.push(box.getAttribute('data-time'));
-                }
+            // Gestion du bouton de connexion
+            document.getElementById('btn-login').addEventListener('click', () => {
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('planner-section').classList.remove('hidden');
             });
 
-            const payload = {
-                content: `🏎️ **Nouvelles disponibilités : ${CONFIG_COURSE.nom}**\n👤 **Pilote :** ${nom}\n🏁 **Catégorie :** ${selectedCat}\n📅 **Créneaux :** ${slots.length > 0 ? slots.join(', ') : 'Aucun créneau sélectionné'}`
-            };
-
-            fetch(webhookURL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(response => {
-                if (response.ok) {
-                    document.getElementById('success-message').style.display = 'block';
-                } else {
-                    alert("Erreur lors de l'envoi vers Discord.");
+            // Gestion du bouton d'envoi Discord
+            document.getElementById('btn-submit').addEventListener('click', () => {
+                const nom = document.getElementById('pilote-nom').value.trim();
+                if (!nom) {
+                    alert("Merci d'indiquer ton pseudo avant d'envoyer !");
+                    return;
                 }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                alert("Erreur de connexion avec le Webhook.");
+
+                let selectedCat = "Non spécifiée";
+                const cats = document.getElementsByName('cat');
+                for (let c of cats) {
+                    if (c.checked) selectedCat = c.value;
+                }
+
+                let slots = [];
+                const checkboxes = document.querySelectorAll('.slot');
+                checkboxes.forEach(box => {
+                    if (box.checked) {
+                        slots.push(box.getAttribute('data-time'));
+                    }
+                });
+
+                const payload = {
+                    content: `🏎️ **Nouvelles disponibilités : ${CONFIG_COURSE.nom}**\n👤 **Pilote :** ${nom}\n🏁 **Catégorie :** ${selectedCat}\n📅 **Créneaux :** ${slots.length > 0 ? slots.join(', ') : 'Aucun créneau sélectionné'}`
+                };
+
+                fetch(webhookURL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('success-message').style.display = 'block';
+                    } else {
+                        alert("Erreur lors de l'envoi vers Discord.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert("Erreur de connexion avec le Webhook.");
+                });
             });
-        }
+        });
     </script>
-
 </body>
 </html>
