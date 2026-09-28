@@ -159,11 +159,9 @@
             <thead>
                 <tr id="table-header">
                     <th>Date / Heure</th>
-                    <!-- Les horaires s'injecteront automatiquement ici -->
                 </tr>
             </thead>
             <tbody id="table-body">
-                <!-- Les jours et cases s'injecteront automatiquement ici -->
             </tbody>
         </table>
 
@@ -183,7 +181,7 @@
 
     <script>
         // =========================================================================
-        // ⚙️ CONFIGURATION DE LA COURSE (Modifie ces lignes pour chaque nouvelle course)
+        // ⚙️ CONFIGURATION DE LA COURSE
         // =========================================================================
         const CONFIG_COURSE = {
             nom: "Endurance 6H de Fuji",
@@ -195,16 +193,13 @@
             ]
         };
 
-        // Remplace par ton URL de Webhook Discord récupérée dans ton salon dédié
-        const webhookURL = "https://discord.com/api/webhooks/1554222081875382364/EqaCFdbIGbRYc8s70u_brnYigSAVVb4Cg6O0TRVeGiwwqf37za9qrh1Rw3pQYZ1dJVbI?thread_id=1554104142539264070
-"; 
+        // Ton URL de Webhook Discord (déjà configurée avec ton thread_id)
+        const webhookURL = "https://discord.com/api/webhooks/1554222081875382364/EqaCFdbIGbRYc8s70u_brnYigSAVVb4Cg6O0TRVeGiwwqf37za9qrh1Rw3pQYZ1dJVbI?thread_id=1554104142539264070";
         // =========================================================================
 
-        // Génération automatique de la grille au chargement de la page
         window.onload = function() {
             document.getElementById('race-title-display').innerText = CONFIG_COURSE.nom;
 
-            // Construction de l'en-tête du tableau (les heures)
             const headerTr = document.getElementById('table-header');
             CONFIG_COURSE.horaires.forEach(heure => {
                 const th = document.createElement('th');
@@ -212,7 +207,6 @@
                 headerTr.appendChild(th);
             });
 
-            // Construction du corps du tableau (les jours et les checkboxes)
             const tbody = document.getElementById('table-body');
             CONFIG_COURSE.jours.forEach(jour => {
                 const tr = document.createElement('tr');
@@ -275,7 +269,7 @@
                 if (response.ok) {
                     document.getElementById('success-message').style.display = 'block';
                 } else {
-                    alert("Erreur lors de l'envoi vers Discord. Vérifie ton URL de Webhook.");
+                    alert("Erreur lors de l'envoi vers Discord.");
                 }
             })
             .catch(error => {
